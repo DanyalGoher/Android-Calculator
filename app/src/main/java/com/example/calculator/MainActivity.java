@@ -3,6 +3,7 @@ package com.example.calculator;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,22 +17,38 @@ import org.mozilla.javascript.Scriptable;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     TextView resultTv,solutionTv;
-    MaterialButton buttonC,buttonBrackOpen,buttonBrackClose;
+    MaterialButton buttonC;
     MaterialButton buttonDivide,buttonMultiply,buttonPlus,buttonMinus,buttonEquals;
     MaterialButton button0,button1,button2,button3,button4,button5,button6,button7,button8,button9;
-    MaterialButton buttonAC,buttonDot;
-
+    MaterialButton buttonAC;
+    ImageView imageView, imageView2;
+    private View decorView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        decorView = getWindow().getDecorView();
+        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility) {
+                if (visibility == 0)
+                    decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+            }
+        });
+
+        imageView = findViewById(R.id.bg);
+
         resultTv = findViewById(R.id.result_tv);
         solutionTv = findViewById(R.id.solution_tv);
 
         assignId(buttonC,R.id.button_c);
-        assignId(buttonBrackOpen,R.id.button_open_bracket);
-        assignId(buttonBrackClose,R.id.button_close_bracket);
         assignId(buttonDivide,R.id.button_divide);
         assignId(buttonMultiply,R.id.button_multiply);
         assignId(buttonPlus,R.id.button_plus);
@@ -48,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         assignId(button8,R.id.button_8);
         assignId(button9,R.id.button_9);
         assignId(buttonAC,R.id.button_ac);
-        assignId(buttonDot,R.id.button_dot);
 
 
 
@@ -75,10 +91,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         if(buttonText.equals("=")){
             solutionTv.setText(resultTv.getText());
-            return;
-        }
-        if (buttonText.equals("786")){
-            solutionTv.setText("");
             return;
         }
         if(buttonText.equals("C")){
@@ -108,6 +120,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return finalResult;
         }catch (Exception e){
             return "Err";
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        if (hasFocus){
+            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
         }
     }
 
